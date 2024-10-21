@@ -1,4 +1,5 @@
 # ตั้งค่า NGINX เพื่อให้รองรับ OWASP เบื้องต้น
+ป้องกันการโจมตีแบบ XSS (Cross-site Scripting) การตั้งค่า HTTP header เพื่อป้องกันการโจมตีแบบ XSS
 ```bash
 server {
     listen 80;
@@ -26,3 +27,30 @@ server {
 3. `X-Content-Type-Options`: ป้องกันไม่ให้เบราว์เซอร์เดา MIME types ของไฟล์
 4. `Content-Security-Policy (CSP)`: นโยบายการรักษาความปลอดภัยที่จำกัดแหล่งที่สามารถโหลดทรัพยากรได้ (เช่น CSS, JavaScript)
 5. `Strict-Transport-Security (HSTS)`: บังคับใช้ HTTPS ตลอดเวลา
+
+## ตัวอย่างการตั้งค่า
+```bash
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Secure headers
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none';";
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Deny access to sensitive files
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
