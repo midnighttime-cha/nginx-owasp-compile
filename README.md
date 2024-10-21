@@ -1,4 +1,4 @@
-# ตั้งค่า NGINX เพื่อให้รองรับ OWASP เบื้องต้น
+# ตั้งค่า NGINX เพื่อให้รองรับมาตรฐาน OWASP
 ป้องกันการโจมตีแบบ XSS (Cross-site Scripting) การตั้งค่า HTTP header เพื่อป้องกันการโจมตีแบบ XSS
 ```bash
 server {
